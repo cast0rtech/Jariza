@@ -5,8 +5,13 @@
 </p>
 
 <p align="center">
-  <b>Monitorización local, telemetría y análisis para tu vehículo Tesla en Android.</b><br>
-  <i>Una alternativa 100% privada y local a Stats for Tesla, Tessie y TeslaMate — sin servidores externos, sin suscripciones y con mapas gratuitos.</i>
+  <b>Local-first Tesla Vehicle Telemetry, Diagnostics & Analytics for Android</b><br>
+  <i>A 100% private, local alternative to Stats for Tesla, Tessie, and TeslaMate — with zero tracking servers, no subscriptions, and free OpenStreetMap maps.</i>
+</p>
+
+<p align="center">
+  <a href="#-tesla-local-stats-castor_tech---english"><b>🇬🇧 English Documentation</b></a> • 
+  <a href="#-tesla-local-stats-castor_tech---español"><b>🇪🇸 Documentación en Español</b></a>
 </p>
 
 <p align="center">
@@ -20,19 +25,251 @@
 
 ---
 
-## 📖 Índice
+# 🇬🇧 Tesla Local Stats (castor_tech) - English
 
-1. [Descripción General](#-descripción-general)
-2. [Los 6 Menús Principales](#-los-6-menús-principales)
-3. [Privacidad, Google Drive y Exportación CSV](#-privacidad-google-drive-y-exportación-csv)
-4. [Guía Paso a Paso para Compilar el APK en Android Studio](#-guía-paso-a-paso-para-compilar-el-apk-en-android-studio)
-5. [Compilación Rápida por Consola / Terminal](#-compilación-rápida-por-consola--terminal)
-6. [Instalación en el Dispositivo Móvil](#-instalación-en-el-dispositivo-móvil)
-7. [Tecnologías Utilizadas](#-tecnologías-utilizadas)
+## 📖 Table of Contents (EN)
+1. [Overview](#-overview)
+2. [The 6 Main Dashboard Menus](#-the-6-main-dashboard-menus)
+3. [Privacy, Google Drive & CSV Export](#-privacy-google-drive--csv-export)
+4. [Step-by-Step Guide: Compile APK in Android Studio](#-step-by-step-guide-compile-apk-in-android-studio)
+5. [Fast Terminal / Command-Line Compilation](#-fast-terminal--command-line-compilation)
+6. [Installing the APK on Your Android Device](#-installing-the-apk-on-your-android-device)
+7. [App Branding & Custom Icon](#-app-branding--custom-icon)
+8. [Technology Stack](#-technology-stack)
 
 ---
 
-## 🌟 Descripción General
+## 🌟 Overview
+
+**Tesla Local Stats** is an open-source, mobile-first Android application designed for Tesla owners who want complete ownership over their driving and telemetry data. 
+
+Unlike commercial alternatives that require ongoing subscriptions and stream sensitive GPS breadcrumbs to remote third-party cloud servers, **Tesla Local Stats**:
+- **Runs 100% Locally:** All telemetry, charging sessions, and drives are saved directly into your device's internal storage via IndexedDB (powered by Dexie.js).
+- **Direct Tesla API Connectivity:** Connects directly from your Android phone to Tesla's official vehicle API endpoints.
+- **Sleep Watchdog (Anti-Vampire Drain):** Automatically suspends background polling 15 minutes after parking, allowing the vehicle's onboard computers to enter deep sleep without draining the 12V or main traction battery.
+- **100% Free Maps (No API Keys Required):** Interactive maps powered by **OpenStreetMap** (Leaflet) with street view, dark mode, and high-resolution Esri satellite imagery — zero Google Maps billing or API keys needed.
+- **Optional Google Drive Sync & Storage Freeing:** Archive older trip GPS coordinates to your personal Google Drive to free up phone storage while keeping all summary statistics on the phone.
+
+---
+
+## 📱 The 6 Main Dashboard Menus
+
+The main screen features a live vehicle telemetry pill (*Millennium Falcon - Model Y*), real-time status (*Asleep*, *Driving*, *Charging*), and quick navigation to all **6 core modules**:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🚗 Millennium Falcon (Model Y)  [🌙 Asleep]     🔄 ☁️ 📥 ⚙️ │
+│ 76% (403 km) • 43,280 km • 21°C interior / 19°C exterior     │
+├─────────────────────────────────────────────────────────────┤
+│                         MAIN MENUS                          │
+│                                                             │
+│  [🔋 Battery]                [⚡ Charging]                   │
+│   SOC level, range & sleep     Sessions, curves & costs (€) │
+│                                                             │
+│  [🧭 Drives]                 [🎛️ Vehicle Commands]         │
+│   History & OSM map viewer     Locks, climate, lights, etc. │
+│                                                             │
+│  [📊 Battery Health]         [🔖 Saved Routes]              │
+│   Cell health & degradation    Live recorder & free maps    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 1. 🔋 Battery
+- Real-time State of Charge (SOC %) circular gauge.
+- Rated (WLTP/EPA) range vs. actual estimated range adjusted for driving habits and ambient temperature.
+- Vampire drain watchdog tracking daily and hourly kWh/% loss while parked.
+
+### 2. ⚡ Charging
+- Automatic detection of DC Superchargers (up to 250 kW) vs. Level 2 AC home chargers (7.4 kW / 11 kW).
+- Live electrical graph: Power (kW), Voltage (V), and Current (A).
+- Historical session log with duration, added energy, and automated **charging cost calculations in euros (€)**.
+
+### 3. 🧭 Drives
+- Chronological drive history with start/finish addresses, mileage, duration, and efficiency in **Wh/km**.
+- Dynamic Leaflet **OpenStreetMap** viewer with colored power gradient polylines:
+  - 🟢 **Green:** Regenerative braking returning energy back into the pack.
+  - 🔵 **Cyan:** Smooth, efficient highway cruising.
+  - 🔴 **Red:** Heavy acceleration and high-power draw.
+- Multi-layer toggle: **OpenStreetMap**, **Dark Mode**, and **High-Resolution Satellite**.
+- **"Open Map"** launcher to pass coordinates directly to native Android navigation apps (**Google Maps, OsmAnd, Organic Maps, Waze**).
+
+### 4. 🎛️ Vehicle Commands
+- Remote control triggers communicating directly with the vehicle:
+  - 🔒 / 🔓 Lock and unlock doors.
+  - 🔥 Climate Control On / Off (preset to 21°C).
+  - 💡 Flash headlights and 🔊 honk horn.
+  - 📦 Actuate front trunk (*Frunk*) and rear liftgate (*Trunk*).
+  - 🛡️ Toggle **Sentry Mode** security system.
+
+### 5. 📊 Battery Health & Diagnostics
+- Battery State of Health (SoH) monitoring (nominal remaining 74.9 kWh vs. original 78.1 kWh = **95.9% health**).
+- Historical degradation milestones (50 km, 12,000 km, 24,000 km, 43,280 km).
+- Long-term cell longevity projection towards the 80% warranty threshold.
+
+### 6. 🔖 Saved Routes
+- Live GPS route recording engine to capture custom journeys point-by-point.
+- Favorite route repository to benchmark recurring commutes and efficiency.
+
+---
+
+## 🔒 Privacy, Google Drive & CSV Export
+
+### ☁️ Cloud Backup & "Free Up Storage" Feature
+Accessed via the cloud icon (**☁️**) in the top header:
+- **Full Database Backup (JSON):** Export or restore your entire database when migrating to a new phone.
+- **"Free Up Storage" Tool:** Packages detailed GPS breadcrumbs for trips older than 30 days into a compressed archive for Google Drive and removes the raw points from local storage, **preserving all high-level drive summaries, energy figures, and dates on your phone**.
+
+### 📥 Universal CSV Exporter
+Accessed via the download icon (**📥**) in the top header:
+- Exports compliant RFC 4180 CSV files with UTF-8 Byte Order Mark (BOM) for seamless viewing in Microsoft Excel, LibreOffice, and Google Sheets:
+  - `Tesla_Drives.csv`
+  - `Tesla_Charges.csv`
+  - `Tesla_GPS_Telemetry.csv`
+  - `Tesla_Battery_Health.csv`
+
+---
+
+## 🛠️ Step-by-Step Guide: Compile APK in Android Studio
+
+Follow these steps to build the native Android `.apk` package:
+
+### Prerequisites:
+- **Android Studio** (Ladybug, Iguana, Hedgehog, or newer).
+- **JDK 17 or JDK 21** installed (e.g., Eclipse Temurin 21 or Android Studio's built-in JBR).
+- **Node.js** (v18+) and **npm**.
+
+---
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/cast0rtech/Jariza.git
+cd Jariza
+```
+
+### Step 2: Install Node Dependencies & Build Web Bundle
+In the project root folder, run:
+```bash
+# 1. Install packages
+npm install
+
+# 2. Compile React + Vite production build
+npm run build
+
+# 3. Synchronize assets to the native Android platform
+npx cap sync android
+```
+
+### Step 3: Open the Android Folder in Android Studio
+1. Launch **Android Studio**.
+2. Click **Open** on the welcome screen (or go to `File > Open...`).
+3. Select the `android` subfolder inside the project:
+   ```
+   C:\...\Jariza\android
+   ```
+4. Click **OK**. Android Studio will begin indexing the Gradle project.
+
+### Step 4: Configure the Gradle JDK in Android Studio
+To ensure Gradle uses a compatible Java runtime:
+1. In Android Studio, open:  
+   **File** > **Settings** (Windows/Linux) or **Android Studio** > **Settings** (macOS).
+2. In the left panel, navigate to:  
+   **Build, Execution, Deployment** > **Build Tools** > **Gradle**.
+3. Under **Gradle JDK**, choose **Java 17** or **Java 21** (such as `Temurin-21` or the bundled `jbr-21`).
+4. Click **Apply** and **OK**.
+
+### Step 5: Sync Gradle
+1. In the upper right corner, click the **"Sync Project with Gradle Files"** button (elephant icon with blue arrow).
+2. Wait for the sync to finish with `BUILD SUCCESSFUL`.
+
+### Step 6: Compile the Debug APK
+1. In the top application menu bar, click:  
+   **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
+2. Gradle will assemble and sign the debug APK.
+3. Upon completion, a notification will pop up in the lower right corner:  
+   > **APK(s) generated successfully for 1 module.**  
+   > `locate`
+4. Click the blue **locate** link.
+
+### Step 7: Locate the Output APK File
+The operating system file manager will open pointing directly to:
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+## ⚡ Fast Terminal / Command-Line Compilation
+
+If you prefer building directly from PowerShell or Terminal without opening the Android Studio GUI:
+
+```powershell
+# 1. Build web distribution and sync Capacitor
+npm run build
+npx cap sync android
+
+# 2. Navigate to android folder and invoke Gradle wrapper
+cd android
+.\gradlew.bat assembleDebug
+```
+
+The APK is produced at:  
+`android/app/build/outputs/apk/debug/app-debug.apk`
+
+---
+
+## 📲 Installing the APK on Your Android Device
+
+1. **Transfer the APK:**  
+   Transfer `app-debug.apk` to your phone via USB cable, Google Drive, WhatsApp Web, or Telegram.
+2. **Allow Unknown Sources:**  
+   When opening the file for the first time, Android will prompt for permission to *"Install unknown apps"*. Allow it for your file manager or browser.
+3. **Launch the App:**  
+   Tap **Install**. You will see the green **castor_tech** icon on your home screen or app drawer ready to launch!
+
+---
+
+## 🎨 App Branding & Custom Icon
+
+The app includes the official **castor_tech** logo featuring the green circular border, bottom electrical plug, and gothic typography across all Android screen densities:
+- `mipmap-mdpi` (48x48 px)
+- `mipmap-hdpi` (72x72 px)
+- `mipmap-xhdpi` (96x96 px)
+- `mipmap-xxhdpi` (144x144 px)
+- `mipmap-xxxhdpi` (192x192 px)
+- Full support for modern Android 8+ **Adaptive Icons** (`ic_launcher_foreground.png`).
+
+---
+
+## 💻 Technology Stack
+
+- **Frontend Framework:** React 19, TypeScript, Tailwind CSS.
+- **Mobile Runtime:** Capacitor 7 (Android native bridge).
+- **Local Storage Engine:** Dexie.js (IndexedDB wrapper).
+- **Mapping:** Leaflet with standard **OpenStreetMap**, Dark Mode & Esri Satellite tiles (100% free, zero API key dependencies).
+- **Icons:** Lucide React.
+- **Build System:** Vite 6, Gradle 8.11, Android SDK 35.
+
+---
+
+<br/>
+
+---
+
+# 🇪🇸 Tesla Local Stats (castor_tech) - Español
+
+## 📖 Índice (ES)
+1. [Descripción General](#-descripción-general-es)
+2. [Los 6 Menús Principales](#-los-6-menús-principales-es)
+3. [Privacidad, Google Drive y Exportación CSV](#-privacidad-google-drive-y-exportación-csv-es)
+4. [Guía Paso a Paso para Compilar el APK en Android Studio](#-guía-paso-a-paso-para-compilar-el-apk-en-android-studio-es)
+5. [Compilación Rápida por Consola / Terminal](#-compilación-rápida-por-consola--terminal-es)
+6. [Instalación en el Dispositivo Móvil](#-instalación-en-el-dispositivo-móvil-es)
+7. [Personalización e Icono castor_tech](#-personalización-e-icono-castor_tech)
+8. [Tecnologías Utilizadas](#-tecnologías-utilizadas-es)
+
+---
+
+## 🌟 Descripción General (ES)
 
 **Tesla Local Stats** es una aplicación diseñada para propietarios de vehículos Tesla que desean el máximo control sobre sus datos de telemetría y consumo sin depender de servicios de terceros en la nube. 
 
@@ -45,7 +282,7 @@ A diferencia de otras apps del mercado, **Tesla Local Stats**:
 
 ---
 
-## 📱 Los 6 Menús Principales
+## 📱 Los 6 Menús Principales (ES)
 
 La pantalla de inicio cuenta con un cuadro de mandos con el estado del vehículo en vivo (*En reposo*, *Conduciendo*, *Cargando*) y acceso directo a los 6 módulos:
 
@@ -97,7 +334,7 @@ La pantalla de inicio cuenta con un cuadro de mandos con el estado del vehículo
 
 ### 5. 📊 Análisis de Batería
 - Cálculo del estado de salud de la batería (*State of Health* - SoH).
-- Capacidad nominal utilizable actual frente a la capacidad original de fábrica.
+- Capacidad nominal utilizable actual frente a la capacidad original de fábrica (95.9% de salud restante).
 - Tabla histórica de degradación vs. kilometraje y proyección del umbral de garantía (80%).
 
 ### 6. 🔖 Guardar Rutas
@@ -106,7 +343,7 @@ La pantalla de inicio cuenta con un cuadro de mandos con el estado del vehículo
 
 ---
 
-## 🔒 Privacidad, Google Drive y Exportación CSV
+## 🔒 Privacidad, Google Drive y Exportación CSV (ES)
 
 ### ☁️ Copia de Seguridad y "Liberar Espacio" (Google Drive)
 Al pulsar el icono de la nube (**☁️**) en la cabecera superior:
@@ -123,9 +360,7 @@ Al pulsar el icono de descarga (**📥**) en la cabecera superior:
 
 ---
 
-## 🛠️ Guía Paso a Paso para Compilar el APK en Android Studio
-
-Sigue estos sencillos pasos para compilar e instalar la aplicación en cualquier teléfono Android:
+## 🛠️ Guía Paso a Paso para Compilar el APK en Android Studio (ES)
 
 ### Requisitos Previos:
 - **Android Studio** instalado en tu ordenador (Ladybug / Iguana / Giraffe o superior).
@@ -141,7 +376,6 @@ cd Jariza
 ```
 
 ### Paso 2: Instalar dependencias y preparar los recursos web
-En la raíz del proyecto, ejecuta:
 ```bash
 # 1. Instalar dependencias de Node
 npm install
@@ -163,7 +397,6 @@ npx cap sync android
 4. Haz clic en **OK**. Android Studio comenzará a cargar el proyecto y a indexar los archivos.
 
 ### Paso 4: Verificar la versión de Java en Android Studio
-Para evitar incompatibilidades de versión:
 1. En Android Studio, ve al menú superior:  
    **File** > **Settings** (en Windows/Linux) o **Android Studio** > **Settings** (en macOS).
 2. En el panel lateral izquierdo, navega hasta:  
@@ -192,9 +425,9 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
-## ⚡ Compilación Rápida por Consola / Terminal
+## ⚡ Compilación Rápida por Consola / Terminal (ES)
 
-Si prefieres compilar directamente desde PowerShell o la terminal sin necesidad de abrir la interfaz gráfica de Android Studio:
+Si prefieres compilar directamente desde PowerShell o la terminal:
 
 ```powershell
 # 1. Compilar los archivos web y sincronizar con Capacitor
@@ -211,7 +444,7 @@ El archivo APK se generará inmediatamente en:
 
 ---
 
-## 📲 Instalación en el Dispositivo Móvil
+## 📲 Instalación en el Dispositivo Móvil (ES)
 
 1. **Transferir el APK:**  
    Envía el archivo `app-debug.apk` a tu teléfono Android (por cable USB, enviándotelo por Google Drive, Telegram o WhatsApp Web).
@@ -222,7 +455,7 @@ El archivo APK se generará inmediatamente en:
 
 ---
 
-## 🎨 Icono de la Aplicación (`castor_tech`)
+## 🎨 Personalización e Icono castor_tech
 
 La app incluye el logotipo oficial de **castor_tech** con el enchufe verde inferior y tipografía gótica en todas las resoluciones nativas de pantalla de Android:
 - `mipmap-mdpi` (48x48 px)
@@ -234,7 +467,7 @@ La app incluye el logotipo oficial de **castor_tech** con el enchufe verde infer
 
 ---
 
-## 💻 Tecnologías Utilizadas
+## 💻 Tecnologías Utilizadas (ES)
 
 - **Frontend:** React 19, TypeScript, Tailwind CSS.
 - **Motor Móvil Híbrido:** Capacitor 7.
@@ -246,5 +479,5 @@ La app incluye el logotipo oficial de **castor_tech** con el enchufe verde infer
 ---
 
 <p align="center">
-  Desarrollado con ❤️ para la comunidad Tesla por <b>castor_tech</b>
+  Developed with ❤️ for the Tesla community by <b>castor_tech</b>
 </p>
