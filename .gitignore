@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production / Build
+dist/
+build/
+**/build/
+
+# Android build outputs & local config
+*.apk
+*.aab
+TeslaLocalStats_castor_tech.apk
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+android/*.iml
+android/app/*.iml
+
+# Capacitor web assets copy in Android (generated on cap sync)
+# Keep it or ignore it depending on need, but web assets in android/app/src/main/assets/public are generated from dist/
+android/app/src/main/assets/public/
+
+# Environment & credentials
+.env
+.env.local
+.env.*.local
+*.keystore
+*.jks
+
+# Logs & temp files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db

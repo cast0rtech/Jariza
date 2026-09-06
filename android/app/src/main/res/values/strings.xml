@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tesla Local Stats</string>
+    <string name="title_activity_main">Tesla Local Stats</string>
+    <string name="package_name">com.tesla.localstats</string>
+    <string name="custom_url_scheme">com.tesla.localstats</string>
+</resources>
